@@ -25,37 +25,6 @@ define(["./array", "./exceptions", "./distance"], function(array, exceptions, di
           clusters = [],
           adjacencyMatrix;
 
-      this.cluster = function() {
-        var clusterId = getNextClusterId(),
-            allClusters = [],
-            isClusterCreated,
-            label,
-            cPoints;
-        
-        for (i in points) {
-          if (isUnclassified(points[i]) ) {
-            isClusterCreated = createCluster(points[i], clusterId);
-
-            if (isClusterCreated) {
-                // Generate id for the next cluster                    
-                clusterId = getNextClusterId();
-            }
-          }
-        }
-        
-        // Convert sets of points into clusters...        
-        for (i in clusters) {
-          label = i.toString();
-          cPoints = clusters[i];
-            
-          if (cPoints != null && cPoints.length > 0) {            
-            allClusters.push(cPoints);
-          }
-        }
-        
-        return allClusters;
-      };
-
       var createCluster = function(p, clusterId) {
         var isClusterCreated = false,
             nPoints = findNeighbors(p, eps),
@@ -118,6 +87,16 @@ define(["./array", "./exceptions", "./distance"], function(array, exceptions, di
         }
 
         return isClusterCreated;
+      };
+
+      var splitNoiseCluster = function() {
+        var noisePoint;
+
+        while (clusters[CLUSTER_ID_NOISE].length > 0) {
+          noisePoint = clusters[CLUSTER_ID_NOISE].pop();
+
+          clusters.push([ noisePoint ]);
+        }
       };
 
       var findNeighbors = function(p, threshold) {
@@ -224,6 +203,38 @@ define(["./array", "./exceptions", "./distance"], function(array, exceptions, di
 
       var getNextClusterId = function() {
         return nextClusterId++;
+      };
+
+      this.cluster = function() {
+        var clusterId = getNextClusterId(),
+            allClusters = [],
+            isClusterCreated,
+            label,
+            cPoints;
+        
+        for (i in points) {
+          if (isUnclassified(points[i]) ) {
+            isClusterCreated = createCluster(points[i], clusterId);
+
+            if (isClusterCreated) {
+                // Generate id for the next cluster                    
+                clusterId = getNextClusterId();
+            }
+          }
+        }
+
+        splitNoiseCluster();
+        
+        // Convert sets of points into clusters...        
+        for (i in clusters) {
+          cPoints = clusters[i];
+            
+          if (cPoints != null && cPoints.length > 0) {            
+            allClusters.push(cPoints);
+          }
+        }
+        
+        return allClusters;
       };
 
       init(points);
