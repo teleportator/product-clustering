@@ -1,0 +1,13 @@
+{
+  "name": "clustering",
+  "version": "0.1.0",
+  "description": "Clustering web app.",
+  "dependencies": {
+    "express": "latest",
+    "requirejs": "latest"
+  },
+  "author": { 
+  	"name": "AS Kasterin",
+  	"email": "teleportator@ya.ru"
+  }
+}
