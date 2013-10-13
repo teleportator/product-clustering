@@ -95,10 +95,12 @@ define(["./array", "./exceptions", "./distance"], function(array, exceptions, di
       var splitNoiseCluster = function() {
         var noisePoint;
 
-        while (clusters[CLUSTER_ID_NOISE].length > 0) {
-          noisePoint = clusters[CLUSTER_ID_NOISE].pop();
+        if (clusters[CLUSTER_ID_NOISE]) {
+          while (clusters[CLUSTER_ID_NOISE].length > 0) {
+            noisePoint = clusters[CLUSTER_ID_NOISE].pop();
 
-          clusters.push([ noisePoint ]);
+            clusters.push([ noisePoint ]);
+          }
         }
       };
 
