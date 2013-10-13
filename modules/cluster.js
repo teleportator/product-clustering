@@ -5,12 +5,15 @@ define(["./array", "./exceptions", "./distance"], function(array, exceptions, di
     this.AttributeFactory = function() {
       var levenstein = new distance.Levenstein(),
           distanceMap = {
-            "string": function(first, second) { return 1 - levenstein.score(first, second); },
-            "number": function(first, second) { return first == second ? 0 : 1; }
+            "countinous": function(first, second) { return 1 - levenstein.score(first, second); },
+            "discrete": function(first, second) { return first == second ? 0 : 1; }
           };
 
       this.create = function(name, type) {
-        return new that.Attribute(name, distanceMap[type]);
+        var distance = name.toLowerCase() == "артикул" || type == "number"
+          ? distanceMap["discrete"]
+          : distanceMap["countinous"];
+        return new that.Attribute(name, distance);
       };
     };
 
